@@ -1,22 +1,48 @@
 import React from 'react';
-import { createTheme, ThemeProvider } from '@material-ui/core/styles';
+// Material UI
+import {
+  createTheme,
+  ThemeProvider,
+  responsiveFontSizes,
+} from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
+// Components
+import Navbar from './components/Navbar';
 
-const theme = createTheme({
+let theme = createTheme({
   palette: {
     type: 'dark',
   },
 });
 
-function App() {
-  return (
-    <React.Fragment>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <h1>CV CREATOR</h1>
-      </ThemeProvider>
-    </React.Fragment>
-  );
+theme = responsiveFontSizes(theme);
+
+class App extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      isEditing: true,
+    };
+  }
+
+  switchMode = () => {
+    this.setState({ isEditing: !this.state.isEditing });
+  };
+
+  render() {
+    return (
+      <React.Fragment>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          <Navbar
+            title='CV CREATOR'
+            isEditing={this.state.isEditing}
+            switchMode={this.switchMode}
+          />
+        </ThemeProvider>
+      </React.Fragment>
+    );
+  }
 }
 
 export default App;

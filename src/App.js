@@ -10,15 +10,11 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 // Components
 import Navbar from './components/Navbar';
 import Form from './components/Form';
+import Preview from './components/Preview';
 
 let theme = createTheme({
   palette: {
     type: 'dark',
-  },
-  MuiPickersToolbar: {
-    toolbar: {
-      backgroundColor: '#3f51b5',
-    },
   },
 });
 
@@ -132,7 +128,11 @@ class App extends React.Component {
             isEditing={this.state.isEditing}
             switchMode={this.switchMode}
           />
-          {this.state.isEditing ? <Form data={data} /> : null}
+          {this.state.isEditing ? (
+            <Form data={data} />
+          ) : (
+            <Preview data={data} />
+          )}
         </ThemeProvider>
       </React.Fragment>
     );

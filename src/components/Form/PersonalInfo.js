@@ -2,6 +2,7 @@ import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import Header from '../Header';
+import MaterialUiPhoneNumber from 'material-ui-phone-number';
 
 function PersonalInfo({ data }) {
   const SECTION = 'personalInfo';
@@ -49,13 +50,15 @@ function PersonalInfo({ data }) {
           />
         </Grid>
         <Grid item xs={12} sm={6}>
-          <TextField
+          <MaterialUiPhoneNumber
             label='Phone Number'
             id='phone-number'
-            type='text'
-            name='phone'
             value={phone}
-            onChange={(event) => handleTextFieldChange(event, SECTION)}
+            defaultCountry={'pt'}
+            onChange={(value) => {
+              const event = { target: { name: 'phone', value } };
+              handleTextFieldChange(event, SECTION);
+            }}
             variant='filled'
             fullWidth
           />

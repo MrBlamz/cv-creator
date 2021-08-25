@@ -7,7 +7,10 @@ import Button from '@material-ui/core/Button';
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
-    padding: `${theme.spacing(1)}px 0`,
+    padding: `${theme.spacing(1)}px ${theme.spacing(2)}px`,
+    [theme.breakpoints.down('xs')]: {
+      padding: `${theme.spacing(1)}px 0`,
+    },
   },
   button: {
     marginLeft: 'auto',

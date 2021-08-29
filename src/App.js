@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import uniqid from 'uniqid';
 // Material UI
 import {
@@ -20,67 +20,65 @@ let theme = createTheme({
 
 theme = responsiveFontSizes(theme);
 
-class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isEditing: true,
-      personalInfo: {
-        firstName: '',
-        lastName: '',
-        email: '',
-        phone: '',
+function App() {
+  const [isEditing, setIsEditing] = useState(true);
+  const [info, setInfo] = useState({
+    personalInfo: {
+      firstName: '',
+      lastName: '',
+      email: '',
+      phone: '',
+    },
+    education: [
+      {
+        id: uniqid(),
+        courseName: '',
+        institution: '',
+        startDate: '',
+        endDate: '',
       },
-      education: [
-        {
-          id: uniqid(),
-          courseName: '',
-          institution: '',
-          startDate: '',
-          endDate: '',
-        },
-      ],
-      experience: [
-        {
-          id: uniqid(),
-          jobTitle: '',
-          companyName: '',
-          startDate: '',
-          endDate: '',
-        },
-      ],
-    };
-  }
+    ],
+    experience: [
+      {
+        id: uniqid(),
+        jobTitle: '',
+        companyName: '',
+        startDate: '',
+        endDate: '',
+      },
+    ],
+  });
 
-  switchMode = () => {
-    this.setState({ isEditing: !this.state.isEditing });
+  const switchMode = () => {
+    setIsEditing(!isEditing);
   };
 
-  handleTextFieldChange = (event, section, id) => {
+  const handleTextFieldChange = (event, section, id) => {
     let { name, value } = event.target;
-    const isArray = Array.isArray(this.state[section]);
+    const isArray = Array.isArray(info[section]);
 
     if (isArray) {
-      const newArray = this.state[section].map((item) => {
+      const newArray = info[section].map((item) => {
         if (item.id === id) item[name] = value;
         return item;
       });
 
-      this.setState({
+      setInfo({
+        ...info,
         [section]: newArray,
       });
-      return;
+    } else {
+      setInfo({
+        ...info,
+        [section]: {
+          ...info[section],
+          [name]: value,
+        },
+      });
     }
-
-    this.setState({
-      [section]: {
-        ...this.state[section],
-        [name]: value,
-      },
-    });
   };
 
-  handleAddItemButtonClick = (section) => {
+  const handleAddItemButtonClick = (section) => {
     const newItem = {
       education: {
         id: uniqid(),
@@ -98,45 +96,41 @@ class App extends React.Component {
       },
     };
 
-    const newArray = [...this.state[section], newItem[section]];
-    this.setState({
+    const newArray = [...info[section], newItem[section]];
+    setInfo({
+      ...info,
       [section]: newArray,
     });
   };
 
-  handleDeleteItemButtonClick = (section, id) => {
-    const newArray = this.state[section].filter((item) => item.id !== id);
-    this.setState({
+  const handleDeleteItemButtonClick = (section, id) => {
+    const newArray = info[section].filter((item) => item.id !== id);
+    setInfo({
+      ...info,
       [section]: newArray,
     });
   };
 
-  render() {
-    const data = {
-      ...this.state,
-      handleTextFieldChange: this.handleTextFieldChange,
-      handleAddItemButtonClick: this.handleAddItemButtonClick,
-      handleDeleteItemButtonClick: this.handleDeleteItemButtonClick,
-    };
+  const data = {
+    ...info,
+    handleTextFieldChange,
+    handleAddItemButtonClick,
+    handleDeleteItemButtonClick,
+  };
 
-    return (
-      <React.Fragment>
-        <ThemeProvider theme={theme}>
-          <CssBaseline />
-          <Navbar
-            title='CV Creator'
-            isEditing={this.state.isEditing}
-            switchMode={this.switchMode}
-          />
-          {this.state.isEditing ? (
-            <Form data={data} />
-          ) : (
-            <Preview data={data} />
-          )}
-        </ThemeProvider>
-      </React.Fragment>
-    );
-  }
+  return (
+    <React.Fragment>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <Navbar
+          title='CV Creator'
+          isEditing={isEditing}
+          switchMode={switchMode}
+        />
+        {isEditing ? <Form data={data} /> : <Preview data={data} />}
+      </ThemeProvider>
+    </React.Fragment>
+  );
 }
 
 export default App;
